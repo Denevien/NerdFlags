@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.bukkit.BukkitPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -243,6 +245,30 @@ public class NerdFlagsListener implements Listener {
                 }
             }
         }
+    }
+	
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+		ApplicableRegionSet setAtLocation = worldguard.getRegionManager(event.getBlock().getWorld()).getApplicableRegions(event.getBlock().getLocation());
+		if (!setAtLocation.canBuild(new BukkitPlayer(worldguard, event.getPlayer()))){
+			if (setAtLocation.allows(plugin.OPENFARMS)){
+				Material m = event.getBlock().getType();
+				Material[] farmables = {Material.CACTUS, Material.CARROT, Material.COCOA, Material.CROPS, Material.MELON_BLOCK, Material.POTATO, Material.PUMPKIN, Material.SUGAR_CANE_BLOCK};
+				for (Material farmable: farmables){
+					if (farmable == m){
+						if ((m == Material.CACTUS)||(m == Material.SUGAR_CANE_BLOCK)){
+							Location loc = new Location(event.getBlock().getWorld(), event.getBlock().getX(), event.getBlock().getY()-1, event.getBlock().getZ());
+							Material materialUnderCurrent = loc.getBlock().getType();
+							if (materialUnderCurrent == m){
+								event.getBlock().breakNaturally();
+							}
+						} else {
+							event.getBlock().breakNaturally();
+						}
+					}
+				}
+			}
+		}
     }
 
     private boolean allows(StateFlag flag, Location location, LocalPlayer player) {
