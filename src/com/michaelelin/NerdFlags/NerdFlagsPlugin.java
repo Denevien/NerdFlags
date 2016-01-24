@@ -42,6 +42,8 @@ public class NerdFlagsPlugin extends JavaPlugin {
     public StringFlag ENTRY_COMMANDS;
 
     public CustomLocationFlag WARP;
+	
+	public StateFlag OPENFARMS;
 
     public StateFlag USE_DISPENSER;
     public StateFlag USE_NOTE_BLOCK;
@@ -96,6 +98,7 @@ public class NerdFlagsPlugin extends JavaPlugin {
             CREATED_BY = new StringFlag("created-by");
             ENTRY_COMMANDS = new StringFlag("entry-commands");
             WARP = new CustomLocationFlag("warp");
+			OPENFARMS = new StateFlag("openfarms", true);
 
             wgCustomFlagsPlugin.addCustomFlag(ALLOW_DROPS);
             wgCustomFlagsPlugin.addCustomFlag(ALLOW_MOB_DROPS);
@@ -109,6 +112,7 @@ public class NerdFlagsPlugin extends JavaPlugin {
             wgCustomFlagsPlugin.addCustomFlag(CREATED_BY);
             wgCustomFlagsPlugin.addCustomFlag(ENTRY_COMMANDS);
             wgCustomFlagsPlugin.addCustomFlag(WARP);
+			wgCustomFlagsPlugin.addCustomFlag(OPENFARMS);
 
             saveDefaultConfig();
             loadConfig();
